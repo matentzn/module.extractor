@@ -55,10 +55,10 @@ public class App {
 			moduleType = ModuleType.BOT;
 			break;
 		case "top":
-			moduleType = ModuleType.BOT;
+			moduleType = ModuleType.TOP;
 			break;
 		case "star":
-			moduleType = ModuleType.BOT;
+			moduleType = ModuleType.STAR;
 			break;
 		default:
 			moduleType = ModuleType.BOT;
