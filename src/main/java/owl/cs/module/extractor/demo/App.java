@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
@@ -73,10 +74,15 @@ public class App {
 			o = man.loadOntologyFromOntologyDocument(ontologyf);
 			SyntacticLocalityModuleExtractor ex = new SyntacticLocalityModuleExtractor(man, o, moduleType);
 			Set<OWLAxiom> ax = ex.extract(seeds);
-			System.out.println("Ontology size: "+o.getLogicalAxiomCount());
+			System.out.println("Ontology size: "+o.getLogicalAxiomCount(Imports.INCLUDED));
 			System.out.println("Seeds: "+seeds.size());
 			System.out.println("Axioms: "+ax.size());
+			System.out.println("Module Type: "+moduleType);
 			OWLOntology mod = OWLManager.createOWLOntologyManager().createOntology(ax);
+			System.out.println("O contains: ");
+			seeds.forEach(c->System.out.println(c+": "+o.getSignature().contains(c)));
+			System.out.println("Mod contains: ");
+			seeds.forEach(c->System.out.println(c+": "+mod.getSignature().contains(c)));
 			OutputStream os = new FileOutputStream(outf);
 			mod.getOWLOntologyManager().saveOntology(mod,os);
 		} catch (Exception e) {
@@ -99,7 +105,7 @@ public class App {
 			if (seed.contains("|")) {
 				String et_s = seed.split("|")[0];
 				EntityType et = determineEntityType(et_s);
-				IRI iri = IRI.create(seed.split("|")[1]);
+				IRI iri = IRI.create(seed.split("\\|")[1]);
 				seeds.add(df.getOWLEntity(et, iri));
 			} else {
 				IRI iri = IRI.create(seed);
